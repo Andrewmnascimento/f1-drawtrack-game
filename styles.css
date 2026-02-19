@@ -1,0 +1,207 @@
+/* =============================================
+   F1 TRACK DRAW — Estilos
+   Fase 1: Layout básico funcional
+   ============================================= */
+
+/* --- RESET E BASE --- */
+
+/* Remove margens/paddings padrão do navegador (cada navegador tem os seus) */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Faz width/height incluir padding e border */
+}
+
+body {
+    /* Fonte legível e moderna, sem serifa */
+    font-family: 'Segoe UI', system-ui, sans-serif;
+
+    /* Esquema de cores escuro — tema corrida noturna */
+    background-color: #0f0f0f;
+    color: #e8e8e8;
+
+    /* Flexbox no body para centralizar tudo verticalmente */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* --- CABEÇALHO --- */
+
+header {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+
+    /* Gradiente vermelho F1 no texto */
+    background: linear-gradient(135deg, #e10600, #ff4444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.track-name {
+    color: #888;
+    font-size: 0.95rem;
+    margin-top: 4px;
+}
+
+.track-name span {
+    color: #e8e8e8;
+    font-weight: 600;
+}
+
+/* --- ÁREA PRINCIPAL --- */
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    max-width: 820px;
+}
+
+/* --- INSTRUÇÕES --- */
+
+#instructions {
+    text-align: center;
+    color: #aaa;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+#instructions p:first-child {
+    color: #ccc;
+    font-size: 1rem;
+}
+
+/* --- O CANVAS --- */
+
+#game-canvas {
+    /*
+        IMPORTANTE: Não mude width/height aqui no CSS para redimensionar o canvas!
+        Se você fizer isso, o conteúdo vai distorcer.
+        O tamanho real do canvas é definido pelos atributos width/height no HTML.
+        CSS apenas controla como ele é exibido na página.
+
+        Para responsividade, a abordagem correta é mais complexa (FASE 7).
+        Por enquanto, apenas garantimos que ele não ultrapasse a tela.
+    */
+    max-width: 100%;
+
+    /* Aparência visual */
+    background-color: #1a1a2e;  /* Azul escuro — simula asfalto/noite */
+    border: 2px solid #333;
+    border-radius: 8px;
+    cursor: crosshair; /* Cursor de mira para indicar que é área de desenho */
+
+    /* Sombra sutil para dar profundidade */
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+
+    /* Bloco para não ter espaço em branco embaixo (canvas é inline por padrão) */
+    display: block;
+}
+
+/* Cursor muda quando está desenhando (será controlado via JS depois) */
+#game-canvas.is-drawing {
+    cursor: none; /* Esconde cursor padrão quando desenhando (opcional) */
+}
+
+/* --- DISPLAY DE PONTUAÇÃO --- */
+
+#score-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 28px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    transition: opacity 0.4s ease;
+}
+
+#score-label {
+    color: #888;
+}
+
+#score-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #e10600;
+}
+
+#score-feedback {
+    color: #aaa;
+    font-style: italic;
+}
+
+/* Classe utilitária para esconder elementos (usaremos muito via JS) */
+.hidden {
+    display: none !important;
+}
+
+/* --- CONTROLES --- */
+
+#controls {
+    display: flex;
+    gap: 12px;
+}
+
+button {
+    padding: 10px 22px;
+    border: 1px solid #444;
+    border-radius: 6px;
+    background: #1f1f1f;
+    color: #e8e8e8;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+button:hover:not(:disabled) {
+    background: #2a2a2a;
+    border-color: #e10600;
+    color: #fff;
+}
+
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Botão principal tem mais destaque */
+#btn-clear {
+    border-color: #e10600;
+}
+
+/* --- INDICADOR DE ESTADO --- */
+
+#state-indicator {
+    font-size: 0.8rem;
+    color: #555;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+#current-state {
+    color: #e10600;
+    font-weight: 700;
+}
+
+/* --- RODAPÉ --- */
+
+footer {
+    margin-top: auto;
+    padding-top: 24px;
+    color: #444;
+    font-size: 0.8rem;
+}
