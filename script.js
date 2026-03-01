@@ -6,8 +6,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const trackNameEl = document.getElementById('track-name');
     const currentStateEl = document.getElementById('current-state');
     const btnClear = document.getElementById('btn-clear');
+    const scoreDisplayEl = document.getElementById('score-display');
+    const scoreValueEl = document.getElementById('score-value');
+    const scoreFeedbackEl = document.getElementById('score-feedback');
 
     const CLOSE_LOOP_THRESHOLD = 20;
+    const SCORE_FACTOR = 7.5; // Ajuste para calibrar a pontuação
     const currentTrack = TRACKS[0];
     trackNameEl.textContent = currentTrack.name;
 
@@ -126,6 +130,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }))
         };
     };
+
+    function calculateScore(playerPoints, trackPoints){
+        const normalizedPlayer = normalizePoints(playerPoints);
+        const normalizedTrack = normalizePoints(trackPoints);
+        let totalDistance = 0;
+        for (let i = 0; i < normalizedTrack.length; i++){
+            const trackPoint = normalizedTrack[i];
+            const closestPlayerPoint = normalizedPlayer.reduce((closest, playerPoint) => {
+                const dist = distance(trackPoint.x, trackPoint.y, playerPoint.x, playerPoint.y);
+                return dist < closest.distance ? {point: playerPoint, distance: dist} : closest;
+            }, {point: null, distance: Infinity});
+            totalDistance += closestPlayerPoint.distance;
+        };
+        const averageDistance = totalDistance / normalizedTrack.length;
+        return Math.max(0, 100 - averageDistance * SCORE_FACTOR); // Score entre 0 e 100
+    };
     canvas.addEventListener('mousedown', function(event) {
         // event.offsetX e event.offsetY dão a posição do mouse
         // RELATIVA ao canvas (não à página inteira — muito útil!)
@@ -136,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     canvas.addEventListener('mouseup', function(event) {
         isDrawing = false;
-        if (currentStateEl.textContent !== "COMPLETE"){
+        if (currentStateEl.textContent === 'DRAWING'){
             currentStateEl.textContent = 'READY';
         };
     });
@@ -154,6 +174,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 if(distance(playerPoints[0].x, playerPoints[0].y, event.offsetX, event.offsetY) <= CLOSE_LOOP_THRESHOLD){
                     playerPoints.push(playerPoints[0]);
                     isDrawing = false;
+                    currentStateEl.textContent = "REVIEW";
+                    const score = calculateScore(playerPoints, currentTrack.points);
+                    scoreDisplayEl.classList.remove('hidden');
+                    scoreValueEl.textContent = `${score.toFixed(2)}`;
+                    scoreFeedbackEl.textContent = score >= 90 ? "Excelente! Você capturou a essência da pista!" :
+                        score >= 80 ? "Muito Bom! Você tem um bom senso de direção." :
+                        score >= 70 ? "Bom trabalho! Com um pouco mais de prática, você pode chegar lá." :
+                        score >= 60 ? "Regular. Tente focar mais nos detalhes da pista." :
+                        "Parece que você se perdeu na curva! Tente novamente.";
                     currentStateEl.textContent = "COMPLETE";
                     render();
                 };

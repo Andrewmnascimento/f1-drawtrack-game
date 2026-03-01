@@ -23,6 +23,9 @@ Draw F1 circuit layouts from memory using your mouse. The game compares your dra
 
 ```
 /final-project
+  |-/tracks-generator
+    |-- tracks-generator.html  # Tool for creating track templates
+    |-- tracks-generator.js    # Logic for track template creation
   ├── index.html   # Page structure
   ├── styles.css   # Styling
   ├── script.js    # Game logic
@@ -36,8 +39,8 @@ Draw F1 circuit layouts from memory using your mouse. The game compares your dra
 - [x] Phase 2: Mouse drawing capture
 - [x] Phase 3: Loop detection
 - [x] Phase 4: Track templates (Monaco, Monza, Suzuka, Spa, Interlagos)
-- [ ] Phase 5: Drawing normalization
-- [ ] Phase 6: Scoring algorithm
+- [x] Phase 5: Drawing normalization
+- [x] Phase 6: Scoring algorithm
 - [ ] Phase 7: Polish & animations
 - [ ] Phase 8: Track of the day system
 
