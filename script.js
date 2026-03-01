@@ -29,14 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
             canvas.height / 2 - 10  // Y: um pouco acima do centro
         );
 
-        ctx.font = '14px Segoe UI';
-        ctx.fillStyle = '#333';
-        ctx.fillText(
-            'Fase 1: Setup ✓ | Fase 2: Captura de pontos em breve...',
-            canvas.width / 2,
-            canvas.height / 2 + 20
-        );
-
         // --- Ponto central como referência visual ---
         ctx.beginPath();
         ctx.arc(
