@@ -102,6 +102,30 @@ document.addEventListener('DOMContentLoaded', function() {
         return Math.sqrt((xLeg ** 2) + (yLeg ** 2));
     }
 
+    function getBoundingBox(points){
+        const minX = Math.min(...points.map(p => p.x));
+        const maxX = Math.max(...points.map(p => p.x));
+        const minY = Math.min(...points.map(p => p.y));
+        const maxY = Math.max(...points.map(p => p.y));
+        return {minX, maxX, minY, maxY};
+    };
+
+    function normalizePoints(points){
+        const {minX, maxX, minY, maxY} = getBoundingBox(points);
+        const width = maxX - minX;
+        const height = maxY - minY;
+        if (height > 0){
+            return points.map(p => ({
+            x: ((p.x - minX) / width) * 100,
+            y: ((p.y - minY) / height) * 100
+            }));
+        } else {
+            return points.map(p => ({
+                x: ((p.x - minX) / width) * 100,
+                y: 0
+            }))
+        };
+    };
     canvas.addEventListener('mousedown', function(event) {
         // event.offsetX e event.offsetY dão a posição do mouse
         // RELATIVA ao canvas (não à página inteira — muito útil!)
@@ -137,4 +161,4 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     });
 
-}); 
+});

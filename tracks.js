@@ -577,6 +577,3 @@ const TRACKS = [
     // { id: "spa", name: "Spa-Francorchamps", ... },
     // { id: "interlagos", name: "Interlagos", ... },
 ];
-
-// Exporta a lista para uso em script.js
-// (Como não usamos módulos ES6 por simplicidade, TRACKS é global)
