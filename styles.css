@@ -1,11 +1,8 @@
-/* =============================================
-   F1 TRACK DRAW — Estilos
-   Fase 1: Layout básico funcional
-   ============================================= */
+
 
 /* --- RESET E BASE --- */
 
-/* Remove margens/paddings padrão do navegador (cada navegador tem os seus) */
+/* Remove margens/paddings padrão do navegador*/
 * {
     margin: 0;
     padding: 0;
