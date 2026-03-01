@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles.css">
+  <title>Tracks Generator</title>
+</head>
+<body>
+  <header>
+    <h1>Tracks Generator</h1>
+    <p>A util to generate the json to tracks.js</p>
+  </header>
+  <main>
+    <input type="file" id="track-input" accept=".png, .jpg, .jpeg .svg" placeholder="Select the file of the track to make the track map">
+    <canvas width="500" height="500" id="tracks-canvas"></canvas>
+    <button id="generate-btn">Finish Track Map</button>
+    <p>Output JSON:</p>
+    <textarea name="output-json" id="output-json"></textarea>
+  </main>
+  <script src="track-generator.js"></script>
+</body>
+</html>

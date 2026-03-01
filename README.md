@@ -33,8 +33,8 @@ Draw F1 circuit layouts from memory using your mouse. The game compares your dra
 ## Implementation Roadmap
 
 - [x] Phase 1: HTML structure + Canvas setup
-- [ ] Phase 2: Mouse drawing capture
-- [ ] Phase 3: Loop detection
+- [x] Phase 2: Mouse drawing capture
+- [x] Phase 3: Loop detection
 - [ ] Phase 4: Track templates (Monaco, Monza, Suzuka, Spa, Interlagos)
 - [ ] Phase 5: Drawing normalization
 - [ ] Phase 6: Scoring algorithm
