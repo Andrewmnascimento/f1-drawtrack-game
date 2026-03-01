@@ -13,7 +13,7 @@ Draw F1 circuit layouts from memory using your mouse. The game compares your dra
 3. Return to the starting point to close the loop
 4. See your similarity score!
 
-Or play in Vercel [here][https://f1-drawtrack-game.vercel.app/]
+Or play in [Vercel](https://f1-drawtrack-game.vercel.app/)
 ## Tech Stack
 
 - HTML5 Canvas API
