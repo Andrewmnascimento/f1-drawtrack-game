@@ -8,33 +8,26 @@
 </head>
 <body>
 
-    <!-- CABEÇALHO: Nome do jogo e pista atual -->
+    
     <header>
         <h1>F1 Track Draw</h1>
         <p class="track-name">Pista: <span id="track-name">Monaco</span></p>
     </header>
 
-    <!-- ÁREA PRINCIPAL DO JOGO -->
+    
     <main>
 
-        <!-- INSTRUÇÕES: Explicam o que o jogador deve fazer -->
         <div id="instructions">
             <p>Desenhe o traçado da pista com o mouse.</p>
             <p>Volte ao ponto inicial para fechar o loop!</p>
         </div>
 
-        <!-- 
-            O CANVAS é onde tudo acontece.
-            - width/height: tamanho em pixels (não confundir com CSS!)
-            - O tamanho do canvas define a "resolução" da área de desenho
-            - Se você mudar o tamanho só via CSS, a imagem estica/distorce
-        -->
+        
         <canvas id="game-canvas" width="800" height="550">
-            <!-- Mensagem para navegadores que não suportam canvas (muito raros hoje) -->
             Seu navegador não suporta Canvas. Por favor, use Chrome, Firefox ou Safari.
         </canvas>
 
-        <!-- DISPLAY DE PONTUAÇÃO: Aparece após o jogador fechar o loop -->
+        
         <div id="score-display" class="hidden">
             <span id="score-label">Sua pontuação:</span>
             <span id="score-value">0%</span>
@@ -64,11 +57,6 @@
         <a href="/tracks-generator/tracks-generator.html">Generate a new track</a>
     </footer>
 
-    <!-- 
-        SCRIPTS: Carregados no final do body (boa prática!)
-        Por quê no final? Para o HTML já estar carregado quando o JS rodar.
-        tracks.js primeiro (dados), depois script.js (lógica que usa esses dados)
-    -->
     <script src="tracks.js"></script>
     <script src="script.js"></script>
 
