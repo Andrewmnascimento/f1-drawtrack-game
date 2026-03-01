@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+    // creating the canvas and the context
     const canvas = document.getElementById('game-canvas');
-    const ctx = canvas.getContext('2d'); // Contexto 2D — onde os métodos de desenho vivem
+    const ctx = canvas.getContext('2d');
 
+    // getting the elements from the DOM
     const trackNameEl = document.getElementById('track-name');
     const currentStateEl = document.getElementById('current-state');
     const btnClear = document.getElementById('btn-clear');
@@ -10,78 +12,47 @@ document.addEventListener('DOMContentLoaded', function() {
     const scoreValueEl = document.getElementById('score-value');
     const scoreFeedbackEl = document.getElementById('score-feedback');
 
-    const CLOSE_LOOP_THRESHOLD = 20;
-    const SCORE_FACTOR = 7.5; // Ajuste para calibrar a pontuação
-    const currentTrack = TRACKS[0];
-    trackNameEl.textContent = currentTrack.name;
+    // Constants
+    const CLOSE_LOOP_THRESHOLD = 20; // distance in pixels to consider the loop closed
+    const SCORE_FACTOR = 7.5; // factor to convert average distance to score (adjust for difficulty)
+    const currentTrack = TRACKS[0]; // select the track
+    
+    // display the track name
+    trackNameEl.textContent = currentTrack.name;  
 
-    function drawTestContent() {
-        // Limpa o canvas (boa prática sempre limpar antes de desenhar)
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // --- Texto de boas-vindas ---
-        ctx.fillStyle = '#444';      // Cor de preenchimento
-        ctx.font = '18px Segoe UI'; // Fonte e tamanho
-        ctx.textAlign = 'center';   // Alinhamento horizontal
-        ctx.fillText(
-            'Clique e arraste para desenhar a pista!',
-            canvas.width / 2,        // X: centro horizontal
-            canvas.height / 2 - 10  // Y: um pouco acima do centro
-        );
-
-        // --- Ponto central como referência visual ---
-        ctx.beginPath();
-        ctx.arc(
-            canvas.width / 2,   // X do centro do círculo
-            canvas.height / 2,  // Y do centro
-            4,                  // raio em pixels
-            0,                  // ângulo inicial (0 = direita)
-            Math.PI * 2         // ângulo final (2π = volta completa)
-        );
-        ctx.fillStyle = '#e10600';
-        ctx.fill();
-    }
-
-    // Chama a função de teste imediatamente
-    drawTestContent();
-    btnClear.addEventListener('click', function() {
-        console.log('🔄 Nova tentativa!');
-        drawTestContent();
-        currentStateEl.textContent = 'READY';
-    });
-
-
-    // Criando a variavel isDrawing
+    // create the isDrawing flag and the playerPoints array to store the points of the player's drawing
     let isDrawing = false;
     let playerPoints = [];
 
+    // define a function to clear the canvas
     function clearCanvas(){
         ctx.clearRect(0,0, canvas.width, canvas.height);
     };
 
+    // define a function to render the player's drawing and the central point
     function render(){
         clearCanvas();
-        // desenhando o ponto central
+        // drawing the central point as a reference for the player
         if(currentStateEl.textContent !== "COMPLETE"){
             ctx.beginPath();
             ctx.arc(canvas.width / 2, canvas.height / 2, 5, 0, 2 * Math.PI);
             ctx.fillStyle = '#DB2525';
             ctx.fill();
         };
-        // desenhando a linha na tela
+        // drawing the track points
         ctx.beginPath();
         if(playerPoints.length > 0){
             ctx.moveTo(playerPoints[0].x, playerPoints[0].y);
             for(let position = 1, points_length = playerPoints.length; position < points_length; position++){
                 ctx.lineTo(playerPoints[position].x, playerPoints[position].y);
             };
-            // estilizando o stroke
+            // stylizing the stroke
             ctx.strokeStyle = '#DB2525';
             ctx.lineWidth = 3;
         };
         ctx.stroke();
     };
-
+    // define a function to render the cursor of the mouse
     function renderCursor(mousePosition){
         // desenhando o cursor do mouse
         if (mousePosition){
@@ -91,13 +62,13 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.stroke();
         };
     };
-
+    // define a function to calculate the distance between two points
     function distance(x1, y1, x2, y2){
         const xLeg = x2 - x1;
         const yLeg = y2 - y1;
         return Math.sqrt((xLeg ** 2) + (yLeg ** 2));
     }
-
+    // define a function to get the bounding box of a set of points
     function getBoundingBox(points){
         const minX = Math.min(...points.map(p => p.x));
         const maxX = Math.max(...points.map(p => p.x));
@@ -105,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const maxY = Math.max(...points.map(p => p.y));
         return {minX, maxX, minY, maxY};
     };
-
+    // define a function to normalize the points to a 0-100 scale based on the bounding box of the points
     function normalizePoints(points){
         const {minX, maxX, minY, maxY} = getBoundingBox(points);
         const width = maxX - minX;
@@ -122,7 +93,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }))
         };
     };
-
+    // define a function to calculate the score based on the player's points and the track's points using 
+    // the average distance from each track point to the closest player point, normalized to a score between 0 and 100
     function calculateScore(playerPoints, trackPoints){
         const normalizedPlayer = normalizePoints(playerPoints);
         const normalizedTrack = normalizePoints(trackPoints);
@@ -139,14 +111,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return Math.max(0, 100 - averageDistance * SCORE_FACTOR); // Score entre 0 e 100
     };
     canvas.addEventListener('mousedown', function(event) {
-        // event.offsetX e event.offsetY dão a posição do mouse
-        // RELATIVA ao canvas (não à página inteira — muito útil!)
+        // start drawing and reset the playerPoints array
         isDrawing = true;
         playerPoints = [];
         currentStateEl.textContent = 'DRAWING';
     });
 
     canvas.addEventListener('mouseup', function(event) {
+        // finish drawing
         isDrawing = false;
         if (currentStateEl.textContent === 'DRAWING'){
             currentStateEl.textContent = 'READY';
@@ -154,18 +126,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     canvas.addEventListener('mousemove', function(event){
+        // clear the canvas and render the player's drawing and the cursor at the current mouse position
         clearCanvas();
         render();
         renderCursor({x: event.offsetX, y: event.offsetY});
 
+        // if the player is drawing, add the current mouse position to the playerPoints array and check if the loop is closed
         if(isDrawing){
             playerPoints.push({x: event.offsetX, y: event.offsetY});
             render();
             renderCursor({x: event.offsetX, y: event.offsetY});
+            // check if the loop is closed by comparing the distance from the current mouse position to the first point in the playerPoints array
             if(playerPoints.length > 100){
                 if(distance(playerPoints[0].x, playerPoints[0].y, event.offsetX, event.offsetY) <= CLOSE_LOOP_THRESHOLD){
                     playerPoints.push(playerPoints[0]);
                     isDrawing = false;
+                    // calculate the score and display the feedback
                     currentStateEl.textContent = "REVIEW";
                     const score = calculateScore(playerPoints, currentTrack.points);
                     scoreDisplayEl.classList.remove('hidden');
@@ -180,6 +156,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
             };
         };
+    });
+
+    // add an event listener to the clear button to reset the game state and clear the canvas
+    btnClear.addEventListener('click', function() {
+        clearCanvas();
+        scoreDisplayEl.classList.add('hidden');
+        currentStateEl.textContent = 'READY';
     });
 
 });
