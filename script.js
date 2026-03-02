@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
             };
         };
-    });
+    }, { passive: false });
 
     // add an event listener to the clear button to reset the game state and clear the canvas
     btnClear.addEventListener('click', function() {
