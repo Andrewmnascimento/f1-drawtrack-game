@@ -127,19 +127,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     canvas.addEventListener('pointermove', function(event){
         event.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
         // clear the canvas and render the player's drawing and the cursor at the current mouse position
         clearCanvas();
         render();
-        renderCursor({x: event.offsetX, y: event.offsetY});
+        renderCursor({x: x, y: y});
 
         // if the player is drawing, add the current mouse position to the playerPoints array and check if the loop is closed
         if(isDrawing){
-            playerPoints.push({x: event.offsetX, y: event.offsetY});
+            playerPoints.push({x: x, y: y});
             render();
-            renderCursor({x: event.offsetX, y: event.offsetY});
+            renderCursor({x: x, y: y});
             // check if the loop is closed by comparing the distance from the current mouse position to the first point in the playerPoints array
             if(playerPoints.length > 100){
-                if(distance(playerPoints[0].x, playerPoints[0].y, event.offsetX, event.offsetY) <= CLOSE_LOOP_THRESHOLD){
+                if(distance(playerPoints[0].x, playerPoints[0].y, x, y) <= CLOSE_LOOP_THRESHOLD){
                     playerPoints.push(playerPoints[0]);
                     isDrawing = false;
                     // calculate the score and display the feedback
