@@ -110,14 +110,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const averageDistance = totalDistance / normalizedTrack.length;
         return Math.max(0, 100 - averageDistance * SCORE_FACTOR); // Score entre 0 e 100
     };
-    canvas.addEventListener('mousedown', function(event) {
+    canvas.addEventListener('pointerdown', function(event) {
         // start drawing and reset the playerPoints array
         isDrawing = true;
         playerPoints = [];
         currentStateEl.textContent = 'DRAWING';
     });
 
-    canvas.addEventListener('mouseup', function(event) {
+    canvas.addEventListener('pointerup', function(event) {
         // finish drawing
         isDrawing = false;
         if (currentStateEl.textContent === 'DRAWING'){
@@ -125,7 +125,8 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     });
 
-    canvas.addEventListener('mousemove', function(event){
+    canvas.addEventListener('pointermove', function(event){
+        event.preventDefault();
         // clear the canvas and render the player's drawing and the cursor at the current mouse position
         clearCanvas();
         render();
