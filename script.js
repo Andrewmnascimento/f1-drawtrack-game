@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // getting the elements from the DOM
     const trackNameEl = document.getElementById('track-name');
     const currentStateEl = document.getElementById('current-state');
+    const btnShowTemplate = document.getElementById('btn-show-template');
     const btnClear = document.getElementById('btn-clear');
     const scoreDisplayEl = document.getElementById('score-display');
     const scoreValueEl = document.getElementById('score-value');
@@ -14,7 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Constants
     const CLOSE_LOOP_THRESHOLD = 20; // distance in pixels to consider the loop closed
-    const SCORE_FACTOR = 7.5; // factor to convert average distance to score (adjust for difficulty)
+    const SCORE_FACTOR = 7.5;  // factor to convert average distance to score (adjust for difficulty)
+    const CANVAS_RESIZE_FACTOR = 1.454545; // factor to resize the canvas to fit the track points (based on the original track dimensions)
     const currentTrack = TRACKS[0]; // select the track
     
     // display the track name
@@ -30,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // define a function to render the player's drawing and the central point
-    function render(){
+    function render(playerPoints = []){
         clearCanvas();
         // drawing the central point as a reference for the player
         if(currentStateEl.textContent !== "COMPLETE"){
@@ -110,6 +112,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const averageDistance = totalDistance / normalizedTrack.length;
         return Math.max(0, 100 - averageDistance * SCORE_FACTOR); // Score entre 0 e 100
     };
+
+    function resizeCanvas(){
+        const clientWidth = canvas.parentElement.clientWidth;
+        let newHeight = clientWidth / CANVAS_RESIZE_FACTOR;
+        if (newHeight > window.innerHeight * 0.8){
+            newHeight = window.innerHeight * 0.8;
+            canvas.width = newHeight * CANVAS_RESIZE_FACTOR;
+            canvas.height = newHeight;
+        } else {
+            canvas.width = clientWidth;
+            canvas.height = newHeight;
+        }
+    };
     canvas.addEventListener('pointerdown', function(event) {
         // start drawing and reset the playerPoints array
         isDrawing = true;
@@ -135,13 +150,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const y = (event.clientY - rect.top) * scaleY;
         // clear the canvas and render the player's drawing and the cursor at the current mouse position
         clearCanvas();
-        render();
+        render(playerPoints);
         renderCursor({x: x, y: y});
 
         // if the player is drawing, add the current mouse position to the playerPoints array and check if the loop is closed
         if(isDrawing){
             playerPoints.push({x: x, y: y});
-            render();
+            render(playerPoints);
             renderCursor({x: x, y: y});
             // check if the loop is closed by comparing the distance from the current mouse position to the first point in the playerPoints array
             if(playerPoints.length > 100){
@@ -159,7 +174,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         score >= 60 ? "Regular. Tente focar mais nos detalhes da pista." :
                         "Parece que você se perdeu na curva! Tente novamente.";
                     currentStateEl.textContent = "COMPLETE";
-                    render();
+                    btnShowTemplate.disabled = false;
+                    render(playerPoints);
+
                 };
             };
         };
@@ -168,8 +185,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // add an event listener to the clear button to reset the game state and clear the canvas
     btnClear.addEventListener('click', function() {
         clearCanvas();
+        playerPoints = [];
         scoreDisplayEl.classList.add('hidden');
         currentStateEl.textContent = 'READY';
+        btnShowTemplate.disabled = true;
+    });
+    // add an event listener to the show template button to render the track points on the canvas
+    btnShowTemplate.addEventListener('click', function() {
+        render(currentTrack.points);
     });
 
+    // add an event listener to the window resize event to resize the canvas
+    window.addEventListener('resize', resizeCanvas);
+    // initial resize of the canvas
+    resizeCanvas();
 });
