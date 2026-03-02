@@ -16,8 +16,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Constants
     const CLOSE_LOOP_THRESHOLD = 20; // distance in pixels to consider the loop closed
     const SCORE_FACTOR = 7.5;  // factor to convert average distance to score (adjust for difficulty)
-    const CANVAS_RESIZE_FACTOR = 1.454545; // factor to resize the canvas to fit the track points (based on the original track dimensions)
-    const currentTrack = TRACKS[0]; // select the track
+    const CANVAS_RESIZE_FACTOR = 1.454545;// factor to resize the canvas to fit the track points (based on the original track dimensions)
+    
+    let date = new Date();
+    const startOfYear = new Date(date.getFullYear(), 0, 0);
+    const diff = date - startOfYear;
+    const day = Math.floor(diff / (1000 * 60 * 60 * 24)); // get the current day of the year
+    let index = day % TRACKS.length; // select the track based on the current day
+    const currentTrack = TRACKS[index]; // select the track
     
     // display the track name
     trackNameEl.textContent = currentTrack.name;  
