@@ -7,8 +7,6 @@ const TRACKS = [
         date: "2025-05-25",     // Fim de semana do GP
         description: "O circuito urbano mais famoso da F1",
 
-        // Pontos do traçado em escala 0-100
-        // TODO (Fase 4): Substituir por pontos reais digitalizados
         
   "points": [
     {
