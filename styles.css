@@ -103,6 +103,7 @@ main {
 
     /* Bloco para não ter espaço em branco embaixo (canvas é inline por padrão) */
     display: block;
+    touch-action: none;
 }
 
 /* Cursor muda quando está desenhando (será controlado via JS depois) */
