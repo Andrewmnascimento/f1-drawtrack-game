@@ -32,12 +32,17 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // define a function to render the player's drawing and the central point
-    function render(playerPoints = []){
+    function render(playerPoints = [], type){
         clearCanvas();
-        const ajustedPoints = playerPoints.map(p => ({
+        let adjustedPoints = [];
+        if (type === "track"){
+            adjustedPoints = playerPoints.map(p => ({
             x: p.x * (canvas.width / 100),
             y: p.y * (canvas.height / 100)
-        }));
+            }));
+        } else {
+            adjustedPoints = playerPoints;
+        };
         // drawing the central point as a reference for the player
         if(currentStateEl.textContent !== "COMPLETE"){
             ctx.beginPath();
@@ -48,9 +53,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // drawing the track points
         ctx.beginPath();
         if(playerPoints.length > 0){
-            ctx.moveTo(ajustedPoints[0].x, ajustedPoints[0].y);
-            for(let position = 1, points_length = ajustedPoints.length; position < points_length; position++){
-                ctx.lineTo(ajustedPoints[position].x, ajustedPoints[position].y);
+            ctx.moveTo(adjustedPoints[0].x, adjustedPoints[0].y);
+            for(let position = 1, points_length = adjustedPoints.length; position < points_length; position++){
+                ctx.lineTo(adjustedPoints[position].x, adjustedPoints[position].y);
             };
             // stylizing the stroke
             ctx.strokeStyle = '#DB2525';
@@ -154,19 +159,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const y = (event.clientY - rect.top) * scaleY;
         // clear the canvas and render the player's drawing and the cursor at the current mouse position
         clearCanvas();
-        let adjustedPlayerPoints;
-        if (playerPoints.length === 0){
-            adjustedPlayerPoints = [];
-        } else {
-            adjustedPlayerPoints = normalizePoints(playerPoints);
-        };
-        render(adjustedPlayerPoints);
+        render(playerPoints, "player");
         renderCursor({x: x, y: y});
 
         // if the player is drawing, add the current mouse position to the playerPoints array and check if the loop is closed
         if(isDrawing){
             playerPoints.push({x: x, y: y});
-            render(adjustedPlayerPoints);
+            render(playerPoints, "player");
             renderCursor({x: x, y: y});
             // check if the loop is closed by comparing the distance from the current mouse position to the first point in the playerPoints array
             if(playerPoints.length > 100){
@@ -185,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         "Parece que você se perdeu na curva! Tente novamente.";
                     currentStateEl.textContent = "COMPLETE";
                     btnShowTemplate.disabled = false;
-                    render(adjustedPlayerPoints);
+                    render(playerPoints, "player");
 
                 };
             };
@@ -207,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         const normalizedPoints = normalizePoints(currentTrack.points);
-        render(normalizedPoints);
+        render(normalizedPoints, "track");
     });
 
     // add an event listener to the window resize event to resize the canvas

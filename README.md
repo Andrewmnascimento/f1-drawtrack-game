@@ -42,8 +42,8 @@ Or play in [Vercel](https://f1-drawtrack-game.vercel.app/)
 - [x] Phase 4: Track templates (Monaco, Monza, Suzuka, Spa, Interlagos)
 - [x] Phase 5: Drawing normalization
 - [x] Phase 6: Scoring algorithm
-- [ ] Phase 7: Polish & animations
-- [ ] Phase 8: Track of the day system
+- [x] Phase 7: Polish & animations
+- [x] Phase 8: Track of the day system
 
 ## Scoring
 
