@@ -127,9 +127,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     canvas.addEventListener('pointermove', function(event){
         event.preventDefault();
+        // geting the relative mouse position on the canvas by considering the canvas's bounding box and the scale of the canvas
         const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const x = (event.clientX - rect.left) * scaleX;
+        const y = (event.clientY - rect.top) * scaleY;
         // clear the canvas and render the player's drawing and the cursor at the current mouse position
         clearCanvas();
         render();
