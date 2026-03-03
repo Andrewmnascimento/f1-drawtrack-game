@@ -1,3 +1,7 @@
+import { inject } from "@vercel/analytics"
+import { injectSpeedInsights } from '@vercel/speed-insights';
+
+injectSpeedInsights();
 document.addEventListener('DOMContentLoaded', function() {
 
     // creating the canvas and the context
